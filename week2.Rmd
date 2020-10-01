@@ -1,0 +1,129 @@
+---
+title: "week2"
+author: "danbom"
+date: '2020 10 1 '
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Code chunk 1: an example plot using ggplot2
+# This plot comes from 
+# https://www.r-graph-gallery.com/320-the-basis-of-bubble-plot.html
+
+# install
+# install.packages("ggplot2")
+# install.packages("dplyr")
+# install.packages("gapminder")
+# install.packages("tidyverse")
+# install.packages("hrbrthemes")
+# install.packages("nlme")
+
+
+#load
+library(ggplot2)
+library(dplyr)
+library(gapminder)
+library(tidyverse)
+library(hrbrthemes)
+library(nlme)
+
+# create data 
+gdp <- gapminder %>% 
+  filter(year=="2007") %>% 
+  dplyr::select(-year) %>%
+  arrange(desc(pop)) %>%
+  mutate(country = factor(country, country))
+
+# create a bubble plot
+ggplot(data = gdp, mapping = aes(x = gdpPercap, y = lifeExp, size = pop, fill = continent)) +
+  geom_point(alpha = 0.5, shape = 21, color = "black") +
+  scale_size(range = c(.1, 24), name = "Population (M)") +
+  theme_minimal() +
+  theme(legend.position = "right") +
+  labs(
+     subtitle = "Life Expectancy vs. GDP per Capita", 
+     y = "Life Expectancy", 
+     x = "GDP per Capita", 
+     title = "Scatter Plot", 
+     caption = "Source: gapminder"
+  )
+```
+
+```{r}
+# install.packages("tidyverse")
+library(tidyverse)
+diamonds
+```
+```{r}
+ggplot(data = diamonds, aes(x = carat, y = price))
+```
+```{r}
+ggplot(data = diamonds, aes(x = carat, y = price)) + geom_point()
+```
+
+```{r}
+ggplot(data = diamonds, aes(x = carat, y = price)) + geom_point() + geom_smooth()
+```
+```{r}
+ggplot(data = diamonds, aes(x = carat, y = price, color = color)) + geom_point()
+```
+```{r}
+# Code chunk 10: aesthetic mapping
+# `shape = cut` maps the `shape` aesthetics of points to the variable `cut` in the dataset to encode further information in the graphic. 
+# Note that the graphic is not so informative because points are overplotted. Sometimes, facetting may handle overplotting.
+# We will talk about facetting later in this lecture. 
+ggplot(data = diamonds, aes(x = carat, y = price, shape = cut)) + geom_point()
+```
+```{r}
+# Code chunk 11: set aesthetic properties to a constant 
+# We can set aesthetic properties to a constant outside aes() function. 
+ggplot(data = diamonds, aes(x = carat, y = price)) + geom_point(color = "blue")
+```
+```{r}
+# Code chunk 12: create a scatter plot
+# you assign a name `p1` to a ggplot object. 
+# By assigning a ggplot object to the variable `p1`, you can easily add different layers to `p1`. 
+p1 <- ggplot(mpg, aes(displ, hwy)) + geom_point()
+p1
+```
+```{r}
+# Code chunk 13: change the axis labels
+# add an additional layer to p1 object
+p1 + 
+  scale_x_continuous("Engine displacement (L)") + 
+  scale_y_continuous("Highway MPG")
+```
+```{r}
+# Code chunk 14: change the axis labels
+# use the short-cut labs()
+p1 + labs(x = "Engine displacement (L)", y = "Highway MPG")
+```
+```{r}
+# Code chunk 15: modify the axis limits
+p1 + scale_x_continuous(limits = c(2, 6))
+```
+```{r}
+# Code chunk 16: modify the axis limits
+# use the short hand functions `xlim()` and `ylim()`
+p1 + xlim(2, 6)
+```
+```{r}
+# Code chunk 17: modify the axis limits
+#  choose where the `ticks` appear
+p1 + scale_x_continuous(breaks = c(2, 4, 6))
+```
+```{r}
+# Code chunk 18: choose your own labels
+p1 + scale_x_continuous(breaks = c(2, 4, 6), label = c("two", "four", "six"))
+```
+```{r}
+# Code chunk 19: add title and axis labels
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color=drv)) + 
+  geom_point() + geom_smooth(method="lm") + 
+  labs(title ="MPG vs Engine size", x = "Engine size", y = "MPG")
+```
+
