@@ -1,0 +1,406 @@
+---
+title: "week3"
+author: "danbom"
+date: '2020 10 2 '
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Adding Text Annotations
+- faithful data
+
+```{r}
+# faithful is a built-in data in R
+# ?faithful in your console will display the help documentation for the data
+# head() will display the first six observations in your screen
+head(faithful)
+```
+
+```{r}
+library(ggplot2)
+```
+
+
+- Let's create the scatter plot between eruptions (x-axis) and waiting (y-axis)
+```{r}
+# A variable name `p` points to (or binds or references) the ggplot object
+# Simply, we just give a name `p` to the ggplot object
+# <- is an assignment operator in R
+# e.g., a <- 10 # a variable name `a` points to the value `10`
+p <- ggplot(faithful, aes(x = eruptions, y = waiting)) + geom_point()
+p
+```
+
+- The annotate() function can be used to add any type of geometric object. In the example below, we add text to a plot
+
+```{r}
+# we are adding another layers to the `p` object
+# Where do the values 3, 48, 4.5, and 66 come from?
+p +
+  annotate("text", x = 3, y = 48, label = "Group1") +
+  annotate("text", x = 4.5, y = 66, label = "Group2")
+```
+
+## Adding Lines
+
+```{r}
+# load the gcookbook package onto the memory
+install.packages('gcookbook', repos = "http://cran.us.r-project.org")
+library(gcookbook)
+```
+
+- heightweight data
+```{r}
+# How do you get the information of the heightweight data?
+head(heightweight)
+```
+
+```{r}
+# How do you read `colour = sex` in the code below?
+# Explain the role of `colour = sex`
+hw_plot <- ggplot(heightweight, aes(x = ageYear, y = heightIn, colour = sex)) + geom_point()
+hw_plot
+```
+
+- geom_hline(yintercept = y) adds horizontal line at y
+```{r}
+# Add horizontal lines
+# how do you get more detailed information about the geom_hline() funtion?
+hw_plot +
+  geom_hline(yintercept = 60)
+```
+
+- geom_vline(xintercept = x) adds horizontal line at x
+
+```{r}
+# Add vertical lines
+hw_plot +
+  geom_vline(xintercept = 14)
+```
+
+- can do both
+
+```{r}
+hw_plot +
+  geom_hline(yintercept = 60) +
+  geom_vline(xintercept = 14)
+```
+
+- geom_abline(intercept = i, slope = s) adds horizontal line with y = i + s*x
+
+```{r}
+hw_plot +
+  geom_abline(intercept = 37.4, slope = 1.75)
+```
+
+```{r}
+mpg
+```
+
+## Axes
+
+- ggplot will display the axes with defaults that look good in most cases, but you might want to control, for example, the axis labels, the number and placement of tick marks, the tick mark labels, and so on.
+
+## Swapping X- and Y-Axes
+
+- You can't read the tick labels
+
+```{r}
+ggplot(mpg, aes(x = model, y = hwy)) + geom_boxplot()
+```
+
+- coord_flip() flips the axes
+
+```{r}
+ggplot(mpg, aes(x = model, y = hwy)) +
+  geom_boxplot() +
+  coord_flip()
+```
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = model)) +
+  geom_boxplot()
+```
+
+## Setting the Position of Tick Marks
+
+- Often, we want to set the tick marks on the axis
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point()
+```
+
+- breaks sets the tick marks.
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  scale_x_continuous(breaks = c(2,4,6)) +
+  scale_y_continuous(breaks = c(15, 25, 35, 45))
+```
+
+## Changing the Text of Tick Labels
+
+- labels sets the tick labels.
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  scale_x_continuous(breaks = c(2,4,6), labels = c("2 cylinders", "4 cylinders", "6 cylinders")) +
+  scale_y_continuous(breaks = c(15, 25, 35, 45))
+```
+
+## Changing the Appearance of Tick Labels
+
+- You can rotate your tick labels using theme
+
+```{r}
+ggplot(mpg, aes(x = model, y = hwy)) +
+  geom_boxplot()
+```
+```{r}
+# rotate 30 degrees
+ggplot(mpg, aes(x = model, y = hwy)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 30))
+```
+
+```{r}
+# rotate 90 degrees
+ggplot(mpg, aes(x = model, y = hwy)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+## Using Colors in Plots
+
+# Setting and Mapping the Colors of Objects
+
+- It is important to distinguish
+-- setting aesthetics to a constant
+-- mapping aesthetics to a variable
+- Setting aesthetics to a constant means you fix the value of aesthetics to a constant value.
+
+```{r}
+# set the value of the color aesthetics to "blue" 
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point(color = "blue") 
+```
+```{r}
+# set the value of the color aesthetics to "red" 
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point(color = "red") 
+```
+```{r}
+# map the value of the color aesthetics to the variable `drv`
+# This is called an aesthetic mapping, and you need aes()
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point(aes(color = drv)) 
+```
+
+## Using a Different Palette for a Discrete Variable
+
+- To use different color scheme, color palettes are available from the RColorBrewer package.
+
+```{r}
+# load RColorBrewer package to a memory
+library(RColorBrewer)
+```
+
+```{r}
+# display.brewer.all() generates available palette
+display.brewer.all()
+```
+
+```{r}
+library(gcookbook)
+hw_splot <- ggplot(heightweight, aes(x = ageYear, y = heightIn, colour = sex)) +
+  geom_point()
+hw_splot
+```
+
+```{r}
+# "Oranges" palette
+hw_splot + 
+  scale_colour_brewer(palette = "Oranges")
+```
+
+```{r}
+# "Set3" palette
+hw_splot + 
+  scale_colour_brewer(palette = "Set3")
+```
+
+## Using a Manually Defined Palette for a Discrete Variable
+
+- scale_colour_manual() sets the values of color
+
+```{r}
+hw_splot +
+  scale_colour_manual(values = c("red", "blue"))
+```
+
+## Using a Manuallly Defined Palette for a Continuous Variable
+
+```{r}
+hw_plot <- ggplot(heightweight, aes(x = ageYear, y = heightIn, colour = weightLb)) +
+  geom_point(size = 3)
+hw_plot
+```
+
+- scale_colour_gradient() sets the low and high values of a color gradient
+
+```{r}
+hw_plot +
+  scale_colour_gradient(low = "yellow", high = "blue")
+```
+
+## Legends
+
+-The PlantGrowth data are the results from an experiment to compare yields (as measured by dried weight of plants) obtained under a control and two different treatment conditions.
+
+```{r}
+pg_plot <- ggplot(PlantGrowth, aes(x = group, y = weight, fill = group)) +
+  geom_boxplot()
+pg_plot
+```
+
+- Use labs() and set the value of fill, colour, shape, or whatever aesthetic is appropriate for the legend
+
+```{r}
+pg_plot + 
+  labs(fill = "Condition")
+```
+
+- In fact, labs() sets the title, subtitle, caption, x-axis label, y-axis label, and the title of the legend.
+
+```{r}
+pg_plot + 
+  labs(title = "Weight of Plants", 
+       subtitle = "By Experimental Conditions", 
+       caption = "source: PlantGrowth", 
+       x = "Experimental Conditions", 
+       y = "Weight (pounds)", 
+       fill = "Condition")
+```
+
+- Changing the position of the legend
+
+```{r}
+# removing legend
+pg_plot +
+  theme(legend.position = "none")
+```
+
+```{r}
+# place the legend on the bottom
+pg_plot +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+# place the legend on the left
+pg_plot +
+  theme(legend.position = "left")
+```
+
+```{r}
+# place the legend inside the plot
+# The coordinate space starts at (0, 0) in the bottom left and goes to (1, 1) in the top right.
+pg_plot +
+  theme(legend.position = c(.8, .3))
+```
+
+## Exercise
+
+# Exercise 1
+
+```{r}
+# Height and weight of school children
+# head() displays the first six observations
+head(heightweight)
+```
+
+```{r}
+ggplot(heightweight, aes(x = ageYear, y = heightIn, size = weightLb, color = sex)) +
+  geom_point()
+```
+
+- Often we want to set (or map) the transparency of points, especially when points overlaps. In that case, alpha controls the transparency of points. In this exercise, use alpha = 0.3.
+
+```{r}
+ggplot(heightweight, aes(x = ageYear, y = heightIn, size = weightLb, color = sex)) +
+  geom_point(alpha = 0.3)
+```
+
+```{r}
+ggplot(heightweight, aes(x = ageYear, y = heightIn, size = weightLb, color = sex)) +
+  geom_point(alpha = 0.3) +
+  labs(title = "Height and weight of school children", 
+       subtitle = "Height vs Weight", 
+       caption = "Source: heightweight", 
+       x = "Age (year)", 
+       y = "Height (inches)", 
+       size = "Weight (Lb)", 
+       color = "Gender"
+  )
+```
+
+```{r}
+ggplot(heightweight, aes(x = ageYear, y = heightIn, size = weightLb, color = sex)) +
+  geom_point(alpha = 0.3) +
+  labs(title = "Height and weight of school children", 
+       subtitle = "Height vs Weight", 
+       x = "Age (year)", 
+       y = "Height (inches)", 
+       size = "Weight (Lb)", 
+       color = "Gender"
+  ) + 
+  theme_classic()
+```
+
+# Exercise2
+
+```{r}
+# Height and weight of school children
+# head() displays the first six observations
+head(heightweight)
+```
+
+- geom_histogram() displays a histogram to display the distribution of a variable.
+
+```{r}
+ggplot(heightweight, aes(x = heightIn)) +
+  geom_histogram()
+```
+
+- The fill aesthetics control the inside color of a geometric object.
+
+```{r}
+ggplot(heightweight, aes(x = weightLb, fill = sex)) +
+  geom_histogram() 
+```
+
+```{r}
+ggplot(heightweight, aes(x = weightLb, fill = sex)) +
+  geom_histogram(alpha = 0.4) + 
+  scale_fill_manual(values = c("orange", "yellow"))
+```
+
+```{r}
+ggplot(heightweight, aes(x = weightLb, fill = sex)) +
+  geom_histogram(alpha = 0.4) + 
+  scale_fill_manual(values = c("orange", "yellow")) +
+  labs(title = "A histogram of the weight of school children", 
+       subtitle = "By gender", 
+       x = "Weight (Lb)", 
+       y = "Count", 
+       fill = "Gender"
+  ) + 
+  theme_minimal()
+```
+
