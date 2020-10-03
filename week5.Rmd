@@ -1,0 +1,993 @@
+---
+title: "week5"
+author: "danbom"
+date: '2020 10 2 '
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Base R
+
+```{r}
+suppressMessages(library(tidyverse))
+```
+
+## R Objects and Variables
+
+- Everything in R is stored as an object, which is associated with a variable name.
+- An object is a technical terminology defined in Object Oriented Programming (OOP). (OOP is an important concept but not in this class)
+- A variable name can be assigned to an object using the assignment operator.
+
+```{r}
+# store a number to a variable named `a`
+a <- 0.2
+```
+
+```{r}
+# print a
+a
+```
+
+```{r}
+# store a vector to a variable named `b`
+b <- c(1,4,9)
+```
+
+```{r}
+# print b
+b
+```
+
+```{r}
+z <- 5
+i <- (z * 2 + 45)/2
+i
+```
+
+# Function
+
+```{r}
+# call (execute or run) the mean() function
+mean(c(1,2,3,4))    
+```
+
+```{r}
+# mean() will not work with NA
+mean(c(1,2,NA,4))     
+```
+
+```{r}
+# When na.rm = TRUE, NA will be removed before computation
+mean(c(1,2,NA,4), na.rm = TRUE)    
+```
+
+## User-Defined Functions
+
+- function.name <- function(arg1, arg2, arg3){body}
+
+```{r}
+# Define se() function that calculate the standard error
+se <- function(x) {
+  v <- var(x)
+  n <- length(x)
+  return(sqrt(v/n))
+}
+```
+
+```{r}
+mySample <- rnorm(n=100, mean=20, sd=4)
+mySample # sd는 표준편차
+se(mySample)
+```
+
+```{r}
+x1 <- rnorm(100, mean=0, sd=1)  # generate 100 random numbers from Normal(0,1)
+x2 <- rnorm(100, mean=3, sd=2)  # generate 100 random numbers from Normal(3,2)
+```
+
+## Vectors
+
+- Type : typeof() returns the type of an object.
+- Attributes: attributes() returns additional arbitrary metadata
+
+```{r}
+typeof(c(1,2,3))
+length(c(1,2,3))
+attributes(c(1,2,3))
+```
+
+## Attributes
+
+```{r}
+a <- c(x=1,y=2,z=3)   # when creating
+names(a)
+```
+
+```{r}
+names(a) <- c("l", "m", "n")   # by modifying existing names
+a
+```
+
+```{r}
+attributes(a)    # names are attributes
+```
+
+```{r}
+attributes(mtcars)
+```
+
+## Type Coercion (Conversion)
+
+```{r}
+v <- c(4, 7, 23.5, 76.2, 80, "rrt", 90)
+v
+```
+
+```{r}
+typeof(v)
+```
+
+```{r}
+sum(c(TRUE, FALSE, TRUE))
+```
+
+- You can explicitly convert data type with as.character(), as.double(), as.integer(), and as.logical().
+
+```{r}
+a <- c(1,2,3)
+a
+```
+
+```{r}
+b <- as.character(a)
+b
+```
+
+## NA represents missing
+
+```{r}
+u <- c(4, 6, NA, 2)
+u
+```
+
+```{r}
+k <- c(TRUE, FALSE, FALSE, NA, TRUE)
+k
+```
+
+## Generate a vector
+
+```{r}
+# c() also combine vectors
+a <- c(1,2,3)
+b <- c(4,5,6)
+c <- c(a, b)
+c
+```
+
+
+```{r}
+# k:n generates a vector whose elements are the sequence of numbers from k to n
+1:10
+```
+
+```{r}
+# seq() generates regular sequence
+# seq(from, to)
+seq(1, 10)
+```
+
+```{r}
+# seq(from, to, by)
+seq(1, 10, 2)
+```
+
+```{r}
+# rep(x, times) replicates the values in x multiple times
+# x can be a number or vector
+# replicates 1 5 times
+rep(1, 5)
+```
+
+```{r}
+# replicates c(1, 2) 5 times
+rep(c(1,2), 5)
+```
+
+```{r}
+# each element of c(1,2) is repeated 5 times
+rep(c(1,2), each = 5)
+```
+
+```{r}
+# rnorm(n, mean = 0, sd = 1) generates a vector of n random samples 
+# from a normal distribution with specific mean and sd. 
+rnorm(100)
+```
+
+```{r}
+qplot(rnorm(10000))
+```
+
+```{r}
+# runif(n, min, max) generates a vector of n random samples 
+# from a uniform distribution whose limits are min and max. 
+runif(100, 0, 1)
+```
+
+```{r}
+qplot(runif(10000, 0, 1))
+```
+
+## Indexing or subsetting a Vector
+
+- Positive integers return elements at the specified positions.
+
+```{r}
+x <- c(2,3,4,5,6,7)
+x[c(3,1)]
+```
+
+- Negative integers omit elements at the specified positions:
+
+```{r}
+x[-c(3,1)]
+```
+
+```{r}
+x[c(TRUE, TRUE, FALSE, FALSE, TRUE, TRUE)]
+```
+
+```{r}
+x > 3
+```
+
+```{r}
+# This is called a logical indexing, which is a very powerful tool.
+# > : greater than (Logical Operators)
+x[x > 3]   
+```
+
+```{r}
+x[x > 3 & x < 5]
+```
+
+```{r}
+# %in% operator 
+# v1 %in% v2 returns a logical vector indicating 
+# whether the elements of v1 are included in v2. 
+c(1,2,3) %in% c(2,3,4,5,6)
+```
+
+```{r}
+a <- c(1,2,3,4,5)
+a
+```
+
+```{r}
+a[c(1,5)] <- 100
+a
+```
+
+```{r}
+a <- c(1,2,3,NA,5,6,NA)
+a
+```
+
+```{r}
+# is.na indicates which elements are missing
+is.na(a)  # returns TRUE when missing
+```
+
+```{r}
+# Type conversion: TRUE and FALSE will be converted into 1 and 0, respectively. 
+# This expression answers the question: How many NSs are in a?
+sum(is.na(a))
+```
+
+```{r}
+# !x = not x (negation)
+!is.na(a)  # returns TRUE when not missing
+```
+
+```{r}
+# This expression answers the question: How many non-NSs are in a?
+sum(!is.na(a))
+```
+
+```{r}
+# logical indexing
+a[is.na(a)] <- 999
+a
+```
+
+```{r}
+# create a vector with names
+a <- c(x = 1, y = 2, z = 3)
+a
+```
+
+```{r}
+# named vector can be indexed using their names
+a[c("x", "z")]
+```
+
+```{r}
+# R uses a "recycling rule" by repeating the shorter vector
+# In this example, R recycled c(TRUE, FALSE) to produce c(TRUE, FALSE, TRUE, FALSE)
+i <- c(TRUE, FALSE)
+a <- c(1,2,3,4)
+a[i]
+```
+
+```{r}
+# R uses a "recycling rule" by repeating the shorter vector
+v1 <- c(4,5,6,7)
+v2 <- c(10,10)
+v1+v2
+```
+
+## Arrange a vector
+
+```{r}
+# sort(x, decreasing = FALSE) 
+# By default, sort() sorts ascending order.
+sort(c(5,6,4))
+```
+
+```{r}
+# sorts into descending order
+sort(c(5,6,4), decreasing = TRUE)
+```
+
+```{r}
+# rev() provides a reversed version of its argument
+rev(c(5,6,4))
+```
+
+```{r}
+# rank() returns the sample ranks of the elements in a vector
+rank(c(5,6,4))
+```
+
+```{r}
+# order() returns a permutation which rearranges 
+# its first argument into ascending or descending order. 
+# What this means is order(c(5,6,4)) 
+# 1) first sorts a vector in ascending order to produce c(4,5,6)
+# 2) and returns the indices of the sorted element in the original vector. 
+# e.g., we have 3 first b/c the index of 4 in the original vector is 3
+# e.g., we have 1 first b/c the index of 5 in the original vector is 1
+# e.g., we have 2 first b/c the index of 6 in the original vector is 2
+order(c(5,6,4))
+```
+
+```{r}
+# We use order() to sort a vector or dataframe
+a <- c(5,6,4)
+a[order(a)]
+```
+
+```{r}
+# sort a dataframe
+head(mtcars[order(mtcars$mpg), ])
+```
+
+## Vectorization of Functions
+
+```{r}
+v <- c(1,4,25)
+sqrt(v)
+```
+
+```{r}
+v <- c(1,2,3)
+v^2
+```
+
+```{r}
+# mean will be subtracted from every element of v1
+v1 <- c(1,2,3,4)
+v1 - mean(v1)
+```
+
+## More functions
+
+```{r}
+# table() creates a frequency table
+a <- c(1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4)
+table(a)
+```
+
+```{r}
+# unique() returns a vector of unique elements
+unique(a)
+```
+
+```{r}
+a <- c(1,2,3,NA,5)
+```
+
+
+```{r}
+# na.rm = TRUE removes NAs before computation
+mean(a, na.rm = TRUE)
+```
+
+## Generating Sequences
+
+```{r}
+5:0
+```
+
+```{r}
+seq(from=1, to=3, by=0.5)
+```
+
+```{r}
+rep(1:2, 3)
+```
+
+```{r}
+# gl() generates sequences involving factors
+# gl(k,n), k = the number of levels, 
+# n = the number of repetitions.
+gl(7,3)
+```
+
+## Exercise
+
+```{r}
+a <- mtcars$mpg
+```
+
+```{r}
+length(a)
+```
+
+```{r}
+# 평균구하기
+sum(a)/length(a)
+mean(a)
+```
+
+- Calculate the variance of a using sd() function.
+
+```{r}
+sd(a)^2
+var(a)
+sum((a-mean(a))^2)/(length(a)-1)
+```
+
+- Standardize the vector a
+
+```{r}
+(a-mean(a))/sd(a)
+scale(a)
+```
+
+```{r}
+max(a)-min(a)
+# another solution
+diff(range(a))
+```
+
+- Normalize the vector a
+
+```{r}
+# your maximum value will be 1, and minimum value will be 0. 
+(a-min(a))/(max(a)-min(a))
+```
+
+```{r}
+qplot(a)
+```
+
+```{r}
+# To set aesthetics, wrap in I()
+qplot(a, color = I("yellow"), fill = I("gray"))
+```
+
+```{r}
+# creates a logical vector in which TRUE indicates the element that is larger than 20
+a>20
+```
+
+```{r}
+# This is a logical indexing where the logical vector 
+# within the subsetting operator (i.e., []) will create a vector with elements larger than 20. 
+a[a>20]
+```
+
+```{r}
+length(a[a>20])
+# same result
+# this happens because of "vectorization" and "type conversion"
+sum(a>20)
+```
+
+## Factors
+
+- Factors are used to represent categorical data (e.g., gender, states).
+
+## creating
+
+```{r}
+# levels are the set of allowed values
+f1 <- factor(c(2,1,1,3,2,1,1))
+f1
+```
+
+```{r}
+typeof(f1)
+```
+
+```{r}
+attributes(f1)
+```
+
+```{r}
+levels(f1)
+```
+
+- The factor’s level is a character vector.
+
+```{r}
+# test for objects of type "character"
+is.character(levels(f1))
+```
+
+- can change levels
+
+```{r}
+levels(f1) <- c("one", "two", "three")
+f1
+```
+
+```{r}
+f2 <- factor(c("Dec", "Apr", "Jan", "Mar"))
+f2
+```
+
+```{r}
+sort(f2)
+```
+
+```{r}
+month_levels <- c(
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+)
+f3 <- factor(c("Dec", "Apr", "Jan", "Mar"), levels = month_levels)
+f3
+```
+
+```{r}
+# In many cases, this is the result that we expect. 
+sort(f3)
+```
+
+```{r}
+table(f3)
+```
+
+```{r}
+table(f2)
+```
+
+```{r}
+# the default level is in alphabetical order 
+f4 <- factor(c("high", "low", "medium", "medium", "high"))
+f4
+```
+
+```{r}
+sort(f4)
+```
+
+```{r}
+f5 <- factor(c("high", "low", "medium", "medium", "high"), levels = c("low", "medium", "high"))
+f5
+```
+
+```{r}
+sort(f5)
+```
+
+```{r}
+f6 <- factor(c("high", "low", "medium", "medium", "high"), levels = c("low", "medium", "high"), ordered = TRUE)
+f6
+```
+
+```{r}
+min(f6)
+```
+
+```{r}
+f6[1] > f6[2]
+```
+
+```{r}
+f7 <- ordered(c("high", "low", "medium", "medium", "high"), levels = c("low", "medium", "high"))
+f7
+```
+
+## Exercise
+
+```{r}
+x <- c("Agree", "Disagree", "Neutral", "Agree" ,"Agree", "Strongly disagree", "Neutral")
+```
+
+```{r}
+# you may want to this
+factor(x, levels = c("Strongly disagree", "Disagree", "Neutral",  "Agree", "Strongly agree"))
+```
+
+```{r}
+x = c("male", "male", "female", "male", "female")
+```
+
+
+```{r}
+# What I've asked you is to change the default alphabetical order using levels options. 
+factor(x, levels = c("male", "female"))
+```
+
+```{r}
+# I just wanted to introduce 'cut()` function
+set.seed(7)
+x <- rnorm(100)
+cut(x, breaks = quantile(x))
+```
+
+## list
+
+## creating
+
+```{r}
+x <- list(1:6, "a", c(TRUE, TRUE, FALSE), c(1.2, 3.3, 4.6, 6.6))
+x
+```
+
+```{r}
+# str() display the internal structure of an R object
+str(x)
+```
+
+```{r}
+typeof(x)
+```
+
+```{r}
+# In R, lm() is a function that fits a regression model to data.
+# In the following R expression, 'mpg' is a dependent variable
+# and `disp` and `cyl` are independent variable. 
+fit <- lm(mpg ~ disp + cyl, data = mtcars)
+fit
+```
+
+```{r}
+typeof(fit)
+```
+
+```{r}
+str(fit)
+```
+
+## Subsetting a List
+
+```{r}
+my.lst <- list(stud.id=34453,      # creat a list
+               stud.name="John", 
+               stud.marks=c(14.3,12,15,19))
+```
+
+```{r}
+my.lst
+```
+
+```{r}
+# [ ] extracts a sub-list 
+my.lst[1]
+```
+
+```{r}
+typeof(my.lst[1])
+```
+
+```{r}
+# [[ ]] extracts the value of an individual element 
+my.lst[[1]]
+```
+
+```{r}
+typeof(my.lst[[1]])
+```
+
+```{r}
+# my.lst[[3]] will index the third element of a list, which is a numeric vector
+# my.lst[[3]][2] will index the second element of the numeric vector
+my.lst[[3]][2]
+```
+
+```{r}
+# In the case of lists with named elements
+# $ extracts the value of an individual element 
+my.lst$stud.id
+```
+
+```{r}
+typeof(my.lst$stud.id)
+```
+
+## Exercise
+
+- fit is a list that contains the outputs of the lm() function for linear regression. Explore the structure of the fit object using str().
+
+```{r}
+fit <- lm(mpg ~ disp + cyl, data = mtcars)
+fit
+```
+
+```{r}
+# fit$coefficient is a vector
+fit$coefficients
+```
+
+```{r}
+# So, we can subset the first element using the following expression
+fit$coefficients[1]
+```
+
+```{r}
+# We can also use the name of element for indexing. 
+fit$coefficients["(Intercept)"]
+```
+
+## Data frames
+
+```{r}
+head(iris)
+```
+
+```{r}
+typeof(iris)
+```
+
+```{r}
+str(iris)
+```
+
+## The apply family of functions
+
+- The apply() family of functions refers to apply(), lapply(), sapply(), vapply(), mapply(), rapply(), and tapply().
+
+- Why do we need them?
+-- They will make your code much shorter by replacing your own copy and paste
+
+```{r}
+# A motivating example: check the number of missing values in each column of the following data frame 'm'
+m <- data.frame(matrix(c(1,2,3,4,NA,6,7,NA,NA,NA,NA,NA), ncol = 4))
+m
+```
+
+```{r}
+sum(is.na(m$X1))
+```
+
+```{r}
+sum(is.na(m$X2))
+```
+
+```{r}
+sum(is.na(m$X3))
+```
+
+```{r}
+sum(is.na(m$X4))
+```
+
+- lapply(X, FUN)
+-- X = a list object in R
+-- FUN = a function in R
+
+- lapply()
+-- takes a function (FUN)
+-- applies it to each element of a list (X)
+-- and returns the results in the form of a list
+
+```{r}
+# This one line of code will still work even when the number of columns are 1000 or more. 
+lapply(m, function(x) sum(is.na(x)))
+```
+
+```{r}
+# lapply() returns a list, whereas sapply() returns a vector, matrix, or array. 
+sapply(m, function(x) sum(is.na(x)))
+```
+
+## Exercise
+
+```{r}
+# install.packages("psych")
+library(psych)
+```
+
+```{r}
+head(bfi)
+```
+
+## Matrices and Arrays
+
+```{r}
+a <- 1:6
+```
+
+```{r}
+# Get or set specific attributes of an object.
+attr(a, "dim") <- c(3,2)
+a
+```
+
+```{r}
+# by default, a matrix is filled by column
+a <- matrix(1:6, ncol=3, nrow=2)
+a
+```
+
+```{r}
+a <- matrix(1:6, ncol=3)
+a
+```
+
+```{r}
+# a matrix can be filled by row using `byrow = TRUE`
+a <- matrix(1:6, ncol=3, nrow=2, byrow = TRUE)
+a
+```
+
+```{r}
+# 2행 3열이라는 뜻
+attributes(a)
+```
+
+```{r}
+dim(a)
+```
+
+```{r}
+b <- array(1:12, c(2,3,2))
+b
+```
+
+```{r}
+dim(b)
+```
+
+- length() generalises to nrow() and ncol() for matrices, and dim() for arrays.
+- names() generalises to rownames() and colnames() for matrices, and dimnames(), a list of character vectors, for arrays.
+
+```{r}
+results <- matrix(c(10, 30, 40, 50, 43, 56, 21, 30), 2, 4, byrow = TRUE)
+colnames(results) <- c("1qrt", "2qrt", "3qrt", "4qrt")
+rownames(results) <- c("store1", "store2")
+results
+```
+
+## Subsetting a Matrix and Array
+
+```{r}
+a <- matrix(1:9, nrow = 3)
+colnames(a) <- c("A", "B", "C")
+a
+```
+
+```{r}
+a[c(TRUE, FALSE, TRUE), c("B", "A")]
+```
+
+```{r}
+a[1, c(2,3)]
+```
+
+```{r}
+# If you omit any dimension, you obtain full columns or rows
+a[2,]
+```
+
+```{r}
+a[,3]
+```
+
+```{r}
+a > 3
+```
+
+```{r}
+a[a>3] <- NA
+a
+```
+
+## Combine Matrices by Columns or Rows
+
+```{r}
+# combine by columns
+cbind(a,a)   
+```
+
+```{r}
+# combine by rows
+rbind(a,a)   
+```
+## Names of the Columns and Rows of Matrices
+
+```{r}
+colnames(a) 
+```
+
+```{r}
+rownames(a) <- c("D", "E", "F")
+rownames(a)
+```
+
+## Data Frames
+
+```{r}
+df <- data.frame(x=1:3, y=c("a", "b", "c"))
+df
+```
+
+```{r}
+# display the internal structure of an R object
+str(df) 
+```
+
+- data.frame() converts strings into factors by default.
+-- This default setting can cause serious problems in some cases.
+-- stringAsFactors = FALSE suppresses this default setting.
+-- Using str() to check data types is always a good practice.
+
+```{r}
+df <- data.frame(x=1:3, y=c("a", "b", "c"), stringsAsFactors = FALSE)
+```
+
+```{r}
+str(df) # display the internal structure of an R object
+```
+
+## Control Flow
+
+- Control flow = the order in which individual statement are executed (or evaluated)
+
+## if-else
+
+```{r}
+x <- -5
+if (x>0) {
+  print("Positive number")
+} else {
+  print("Negative number")
+}
+```
+
+## for
+
+```{r}
+for (i in 1:3) {
+  print(i^2)
+}
+```
+
+```{r}
+# count the number of even numbers
+x <- c(2,5,3,9,8,11,6)
+count <- 0
+for (val in x) {
+  if(val %% 2 == 0)  count = count+1
+}
+print(count)
+```
+
