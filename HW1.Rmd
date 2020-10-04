@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
 ## Problem 1
 
 ```{r}
@@ -24,6 +25,8 @@ ggplot(data = mpg, aes(x = hwy, fill = drv)) + geom_histogram( alpha = 0.5) + th
      caption = "Source: mpg"
   )
 ```
+
+
 
 ## Problem 2
 
@@ -41,6 +44,8 @@ ggplot(data = mpg, aes(x = hwy, fill = drv)) + geom_histogram( alpha = 0.5) + th
   )
 ```
 
+
+
 ## Problem 3
 
 ```{r}
@@ -49,15 +54,72 @@ options(scipen=999)
 ```
 
 ```{r}
-ggplot(midwest, aes(x = area, y = poptotal, color = state, size = popdensity)) +
-  geom_point(alpha = 0.4) +
+ggplot(midwest, aes(x = area, y = poptotal)) +
+  geom_point(alpha = 0.4, aes(color = state, size = popdensity)) + 
+  xlim(c(0, 0.1)) + ylim(c(0, 500000)) +
   labs(title = "Scatterplot", 
        subtitle = "Area vs Population", 
        x = "Area", 
        y = "Population", 
        color = "State",
-       size = "Popdensity"
+       size = "Popdensity",
+       caption = "Source: midwest"
   ) + 
-  theme_classic() + geom_smooth(se=FALSE) 
+  theme_classic() + geom_smooth(se=FALSE)
+```
+
+
+
+## Problem 4
+
+```{r}
+library(datasets)
+```
+
+```{r}
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) + geom_point(aes(color = Species, shape = Species), size = 6, alpha = 0.5) + labs(title = "Scatterplot", 
+       subtitle = "Sepal.Length vs Sepal.Width", 
+       x = "Sepal.Length", 
+       y = "Sepal.Width", 
+       color = "Species",
+       caption = "Source: iris"
+  ) + theme_minimal() 
+```
+
+
+
+## Problem 5
+
+```{r}
+library(ggplot2)
+library(gcookbook)
+```
+
+```{r}
+ggplot(data = heightweight, mapping = aes(x = heightIn, y = weightLb, color=sex)) + 
+  geom_point(size = 3, alpha = 0.5) + geom_smooth(method="lm",se=FALSE) + 
+  labs(title = "Scatterplot", 
+       subtitle = "Weight vs Height", 
+       x = "heighIn", 
+       y = "weightLb", 
+       color = "sex",
+       caption = "Source: heightweight"
+  )+ theme_classic() 
+```
+
+
+
+## Problem 6
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+ggplot(data = mpg, aes(x = manufacturer, fill = class)) + geom_bar(width = 0.5) + theme_minimal() + labs(title = "Barplot", 
+       subtitle = "Manufacturer across Vehicle Classes", 
+       x = "manufacturer", 
+       y = "count", 
+       color = "class") + theme(axis.text.x = element_text(angle = 65)) +  scale_fill_brewer(palette="Spectral")
 ```
 
